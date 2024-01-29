@@ -60,13 +60,51 @@ U_MAZE_TEST = [[1, 1, 1, 1, 1],
               [1, 1, 1, 1, 1]]
 
 BIG_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1],
+                [1, R, 0, 1, 1, 0, G, 1],
+                [1, 0, 0, 1, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 1, 1, 1],
+                [1, 0, 0, 1, 0, 0, 0, 1],
+                [1, 0, 1, 0, 0, 1, 0, 1],
+                [1, G, 0, 0, 1, 0, G, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1]]
+
+BIG_MAZE_TEST_SWITCHED_GOAL = [[1, 1, 1, 1, 1, 1, 1, 1],
                 [1, R, 0, 1, 1, 0, 0, 1],
                 [1, 0, 0, 1, 0, 0, 0, 1],
                 [1, 1, 0, 0, 0, 1, 1, 1],
                 [1, 0, 0, 1, 0, 0, 0, 1],
                 [1, 0, 1, 0, 0, 1, 0, 1],
-                [1, 0, 0, 0, 1, 0, G, 1],
+                [1, G, 0, 0, 1, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1]]
+
+BIG_MAZE_TEST_SWITCHED_GOAL_AND_RESET = [[1, 1, 1, 1, 1, 1, 1, 1],
+                [1, G, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 1, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 1, 1, 1],
+                [1, 0, 0, 1, 0, 0, 0, 1],
+                [1, 0, 1, 0, 0, 1, 0, 1],
+                [1, 0, 0, 0, 1, 0, R, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1]]
+
+HARDEST_MAZE_TEST_SWITCHED_GOAL = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, R, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+                    [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+                    [1, G, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+HARDEST_MAZE_TEST_SWITCHED_GOAL_AND_RESET = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, G, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+                    [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+                    [1, 0, 0, 1, 0, 0, 0, 1, 0, R, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
 HARDEST_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, R, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -140,6 +178,7 @@ class MazeEnv(gym.Env):
       maze_height=0.5,
       manual_collision=False,
       non_zero_reset=False,
+      fixed_random_goal=False,
       reward_type='dense',
       *args,
       **kwargs):
@@ -155,6 +194,10 @@ class MazeEnv(gym.Env):
     self._maze_height = maze_height
     self._maze_size_scaling = maze_size_scaling
     self._manual_collision = manual_collision
+    self._non_zero_reset = non_zero_reset
+    self._fixed_random_goal = fixed_random_goal #To be true if the maze should select a random goal from env goal states and stick to it for the lifetime of the environment 
+    print("fixed random goal: ", self._fixed_random_goal)
+    self._goal_cell = None #To be set if the maze should select a random goal from env goal states and stick to it for the lifetime of the environment
 
     self._maze_map = maze_map
 
@@ -234,30 +277,37 @@ class MazeEnv(gym.Env):
     return (x, y)
 
   def goal_sampler(self, np_random, only_free_cells=True, interpolate=True):
-    valid_cells = []
-    goal_cells = []
+    if self._fixed_random_goal and self._goal_cell is not None:
+        cell = self._goal_cell
+    else:
+        valid_cells = []
+        goal_cells = []
 
-    for i in range(len(self._maze_map)):
-      for j in range(len(self._maze_map[0])):
-        if self._maze_map[i][j] in [0, RESET, GOAL] or not only_free_cells:
-          valid_cells.append((i, j))
-        if self._maze_map[i][j] == GOAL:
-          goal_cells.append((i, j))
+        for i in range(len(self._maze_map)):
+          for j in range(len(self._maze_map[0])):
+            if self._maze_map[i][j] in [0, RESET, GOAL] or not only_free_cells:
+              valid_cells.append((i, j))
+            if self._maze_map[i][j] == GOAL:
+              goal_cells.append((i, j))
 
-    # If there is a 'goal' designated, use that. Otherwise, any valid cell can
-    # be a goal.
-    sample_choices = goal_cells if goal_cells else valid_cells
-    cell = sample_choices[np_random.choice(len(sample_choices))]
+        # If there is a 'goal' designated, use that. Otherwise, any valid cell can
+        # be a goal.
+        sample_choices = goal_cells if goal_cells else valid_cells
+        cell = sample_choices[np_random.choice(len(sample_choices))]
+        if self._fixed_random_goal and self._goal_cell is None:
+            self._goal_cell = cell
+
     xy = self._rowcol_to_xy(cell, add_random_noise=True)
 
     random_x = np.random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
     random_y = np.random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
 
-    xy = (max(xy[0] + random_x, 0), max(xy[1] + random_y, 0))
+    xy = (max(xy[0] + random_x, 0), max(xy[1] + random_y, 0)) #TODO: ALLOW negative goals
 
     return xy
   
   def set_target_goal(self, goal_input=None):
+    print("goal input: ", goal_input)
     if goal_input is None:
       self.target_goal = self.goal_sampler(np.random)
     else:
@@ -272,7 +322,9 @@ class MazeEnv(gym.Env):
     size_scaling = self._maze_size_scaling
     for i in range(len(structure)):
       for j in range(len(structure[0])):
-        if structure[i][j] == RESET:
+        if self._non_zero_reset and structure[i][j] == GOAL:
+          return j * size_scaling, i * size_scaling
+        elif structure[i][j] == RESET:
           return j * size_scaling, i * size_scaling
     raise ValueError('No robot in maze specification.')
 
@@ -375,3 +427,11 @@ class MazeEnv(gym.Env):
       return goal_reaching_policy_fn(obs, (goal_x, goal_y))
 
     return policy_fn
+  
+  def seed(self, seed=None):  # Compatibility with new gym
+    print("SEEDING WITH SEED: ", seed)
+    self._seed(seed)
+    1/0
+      
+  def _seed(self, seed=None):
+    np.random.seed(seed)
