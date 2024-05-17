@@ -408,6 +408,60 @@ register(
 )
 
 register(
+    id='antmaze-medium-diverse-v2-2',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.BIG_MAZE_TEST_CORNER_2,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_big-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'fixed_random_goal':True,
+        'v2_resets': True,
+    }
+)
+
+register(
+    id='antmaze-medium-diverse-v2-3',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.BIG_MAZE_TEST_CORNER_3,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_big-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'fixed_random_goal':True,
+        'v2_resets': True,
+    }
+)
+
+register(
+    id='antmaze-medium-diverse-v2-4',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.BIG_MAZE_TEST_CORNER_4,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_big-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'fixed_random_goal':True,
+        'v2_resets': True,
+    }
+)
+
+register(
     id='antmaze-medium-diverse-v2-switched',
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
@@ -447,6 +501,57 @@ register(
     max_episode_steps=1000,
     kwargs={
         'maze_map': maze_env.HARDEST_MAZE_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'v2_resets': True,
+    }
+)
+
+register(
+    id='antmaze-large-diverse-v2-2',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.HARDEST_MAZE_TEST_CORNER_2,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'v2_resets': True,
+    }
+)
+
+register(
+    id='antmaze-large-diverse-v2-3',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.HARDEST_MAZE_TEST_CORNER_3,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+        'v2_resets': True,
+    }
+)
+
+register(
+    id='antmaze-large-diverse-v2-4',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.HARDEST_MAZE_TEST_CORNER_4,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
         'non_zero_reset':False, 
