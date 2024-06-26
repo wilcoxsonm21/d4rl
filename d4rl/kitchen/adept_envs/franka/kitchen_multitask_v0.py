@@ -128,6 +128,9 @@ class KitchenV0(robot_env.RobotEnv):
         self.obs_dict['goal'] = self.goal
         if self.goal_concat:
             return np.concatenate([self.obs_dict['qp'], self.obs_dict['obj_qp'], self.obs_dict['goal']])
+    
+    def get_obs(self):
+        return self._get_obs()
 
     def reset_model(self):
         reset_pos = self.init_qpos[:].copy()
