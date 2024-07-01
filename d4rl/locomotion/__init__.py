@@ -553,7 +553,7 @@ register(
     kwargs={
         'maze_map': maze_env.HARDEST_MAZE_TEST_CORNER_4,
         'reward_type':'sparse',
-        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v2/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse_fixed.hdf5',
+        'dataset_url':'https://drive.google.com/file/d/14yIILOOkRsQuIax4WVZp7QR3SZO8NO_N/view?usp=drive_link',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,

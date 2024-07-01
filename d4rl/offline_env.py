@@ -6,7 +6,7 @@ import gym
 from gym.utils import colorize
 import h5py
 from tqdm import tqdm
-
+import gdown
 
 def set_dataset_path(path):
     global DATASET_PATH
@@ -27,9 +27,16 @@ def get_keys(h5file):
     h5file.visititems(visitor)
     return keys
 
+GOOGLE_DRIVE_FILE_NAMES = {
+    "14yIILOOkRsQuIax4WVZp7QR3SZO8NO_N": "Ant_maze_hardest-maze_bottom_corner_noisy_multistart_True_multigoal_True_sparse_fixed_sparse.hdf5",
+}
 
 def filepath_from_url(dataset_url):
-    _, dataset_name = os.path.split(dataset_url)
+    if "drive.google.com" in dataset_url:
+        id = dataset_url.split('/')[-2]
+        dataset_name = GOOGLE_DRIVE_FILE_NAMES[id]
+    else:
+        _, dataset_name = os.path.split(dataset_url)
     dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
     return dataset_filepath
 
@@ -38,7 +45,10 @@ def download_dataset_from_url(dataset_url):
     dataset_filepath = filepath_from_url(dataset_url)
     if not os.path.exists(dataset_filepath):
         print('Downloading dataset:', dataset_url, 'to', dataset_filepath)
-        urllib.request.urlretrieve(dataset_url, dataset_filepath)
+        if "drive.google.com" in dataset_url:
+            gdown.download(dataset_url, dataset_filepath, quiet=False, fuzzy=True)
+        else:
+            urllib.request.urlretrieve(dataset_url, dataset_filepath)
     if not os.path.exists(dataset_filepath):
         raise IOError("Failed to download dataset from %s" % dataset_url)
     return dataset_filepath
