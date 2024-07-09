@@ -616,7 +616,7 @@ register(
 
 register(
     id='antmaze-ultra-diverse-v0',
-    entry_point='HIQL.d4rl_ext.locomotion.ant:make_ant_maze_env',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=2000,
     kwargs={
         'deprecated': True,
@@ -633,7 +633,7 @@ register(
 
 register(
     id='antmaze-ultra-diverse-v0-2',
-    entry_point='HIQL.d4rl_ext.locomotion.ant:make_ant_maze_env',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=2000,
     kwargs={
         'deprecated': True,
@@ -650,7 +650,7 @@ register(
 
 register(
     id='antmaze-ultra-diverse-v0-3',
-    entry_point='HIQL.d4rl_ext.locomotion.ant:make_ant_maze_env',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=2000,
     kwargs={
         'deprecated': True,
@@ -667,7 +667,7 @@ register(
 
 register(
     id='antmaze-ultra-diverse-v0-4',
-    entry_point='HIQL.d4rl_ext.locomotion.ant:make_ant_maze_env',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=2000,
     kwargs={
         'deprecated': True,
